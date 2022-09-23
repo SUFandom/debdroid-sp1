@@ -8,6 +8,7 @@ if (grep -i "Debdroid" /etc/os-release)
 then
 if (dialog --backtitle "Debdroid SP1 Setup" --title "Action" --yes-label "Install" --no-label "Cancel" --yesno "Do you want to install Debdroid Service Pack 1??" 0 0)
 then
+cp os-release/os-release /usr/lib/os-release
 cp diagnose/diagnose /bin/
 mkdir /usr/share/git-manager/
 cp git-manager/git-manager /usr/bin 
