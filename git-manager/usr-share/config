@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Exit Vars
+: ${DIALOG_OK=0}
+: ${DIALOG_CANCEL=1}
+: ${DIALOG_ESC=255}
+
+BT="Settings"
+MENU="Configuration Settings"
+if [ -e /var/lib/git-manager/key ]
+then
+echo ""
+else
+touch /var/lib/git-manager/key
+fi
+if (grep -i "true" /var/lib/git-manager/key )
+then
+VARL="Current config is: True"
+else
+VARL="Current Config is: False"
+fi
+
+exec 3>&1
+SELECTION=$( dialog \
+  --backtitle "$BT" \
+  --title "$MENU" \
+  --menu "Pick what you want to configure?" 0 0 0 \
+  "Log" " ($VARL) Save logs on what you 'git-cloned, Saves data in TMP and /var' dir " \
+  "GitPush" "Enter your account info to commit and push specific gits." \
+  2>&1 1>&3
+  )
+exec 3>&-
+case $? in
+  $DIALOG_CANCEL)
+  bash git-manager ;;
+  $DIALOG_ESC)
+  exit 255 ;;
+esac
+case $SELECTION in 
+  "Log")
+  if ( grep -i "true" /var/lib/git-manager/key )
+  then
+  echo "false" > /var/lib/git-manager/key
+  else
+  echo "true" > /var/lib/git-manager/key
+  fi
+  bash /usr/share/git-manager/config
+  ;;
+  "GitPush")
+  bash /usr/share/git-manager/infowrite --glbl
+  ;;
+esac
+

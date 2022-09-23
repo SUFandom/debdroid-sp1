@@ -1,0 +1,114 @@
+#!/bin/bash
+
+if [[ "$1" == "--internet" ]]
+then
+ip address show wlan0 &>/dev/null || { echo "not connected to wifi" ; exit 1 ;}
+ping -qc4 google.com | grep -o '[0-9]*% packet loss'
+exit
+fi
+
+if [[ "$1" == "--performance" ]]
+then
+echo "Checking something"
+if (whereis tracker-miner-fs)
+then
+apt remove tracker-miner-fs -y
+apt-mark hold tracker-miner-fs
+else
+echo "No problems detected, if problem persists, Submit an issue Ticket"
+fi
+fi
+
+if [[ "$1" == "--vs-code-not-working" ]]
+then
+echo "Trying Solution 1...."
+code --no-sandbox --enable-crashpad %F
+sleep 10
+while true ; do
+read -p "Did it work? [Y/N]" ans
+case $ans in
+ [Yy]*)
+    bash /usr/share/diagnose/Visual-studio --fix-one
+    echo "You can now launch VS Code using VSCode on your desktop." ; exit ; break ; exit ;;
+  [Nn]*)
+  echo "Trying Other Options" ; break ;;
+  *)
+  echo ""
+  ;;
+esac
+done
+sleep 3
+echo "Trying Solution No. 2"
+code --no-sandbox --enable-crashpad --user-data-dir $HOME
+sleep 10
+while true ; do
+read -p "Did it work? [Y/n]" answ
+case $answ in
+  [Yy]*)
+  bash /usr/share/diagnose/Visual-studio --fix-two
+  echo "You can launch VS Code now on Desktop using VSCode on your screen.."
+  break ; exit ;;
+  [Nn]*)
+  echo "Please submit an Issue ticket, so i can fix it"
+  break ; exit ;;
+  *)
+  echo ""
+  ;;
+  esac
+  done
+  exit
+  fi
+
+if [["$1" == "--help"]] 
+then
+echo "Diagnose - 2022 By SUFandom"
+echo "Under The Open Source Code Community (Copyleft)"
+echo "This thing is still has big"
+echo "limitations because its backbone, is"
+echo "just under Bash."
+echo ""
+echo "Usage: diagnose [args] "
+echo "      --help"
+echo "            Show help, obviously...."
+echo "      --internet"
+echo "            This tool is trying to connect and"
+echo "            test your connectivity to the net."
+echo ""
+echo "      --performance (Limited Func)"
+echo "            Tries to check performance issues"
+echo "            By checking if Tracker-miner-fs"
+echo "            Is present."
+echo "            BUT! THIS THING ONLY HAS LIMITED"
+echo "            CAPABILITIES, IT WONT SOLVE 95% THE LAG"
+echo "            just submit the problem to issues page"
+echo ""
+echo "      --vs-code-not-working"
+echo "            Tries to fix VS Code when not working."
+exit
+fi
+
+
+echo "Diagnose v. 1.2s - 2022 By SUFandom"
+echo "Under The Open Source Code Community (Copyleft)"
+echo "This thing is still has big"
+echo "limitations because its backbone, is"
+echo "just under Bash."
+echo ""
+echo "Usage: diagnose [args] "
+echo "      --help"
+echo "            Show help, obviously...."
+echo "      --internet"
+echo "            This tool is trying to connect and"
+echo "            test your connectivity to the net."
+echo ""
+echo "      --performance (Limited Func)"
+echo "            Tries to check performance issues"
+echo "            By checking if Tracker-miner-fs"
+echo "            Is present."
+echo "            BUT! THIS THING ONLY HAS LIMITED"
+echo "            CAPABILITIES, IT WONT SOLVE 95% THE LAG"
+echo "            just submit the problem to issues page"
+echo ""
+echo "      --vs-code-not-working"
+echo "            Tries to fix VS Code when not working."
+exit

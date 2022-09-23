@@ -1,0 +1,85 @@
+#!/bin/bash
+
+if [[ "$1" == "--del" ]]
+then
+# Exit Vars
+: ${DIALOG_OK=0}
+: ${DIALOG_CANCEL=1}
+: ${DIALOG_ESC=255}
+
+BK="Delete Repository"
+MN="Main Delete Repository"
+
+dialog --infobox "Reminder that These Records may not be present because you may disable the Log Function in Settings... And Please Copy the Directory Link to delete repos" 0 0
+
+sleep 5
+
+if (dialog --backtitle "$BK" --title "$MN" --yes-label "Yes" --no-label "Cancel" --yesno "Do you want to see saved records?" 0 0)
+then
+echo ""
+else
+bash git-manager
+fi
+exec 3>&1
+dialog --backtitle "$BK" --title "Lists of archived Cloned Repository. (ESC to cancel)" --textbox /var/lib/git-manager/records.txt 30 50
+exec 3>&-
+case $? in
+  $DIALOG_OK)
+  dialog --infobox "Wait....." 0 0
+  sleep 3 ;;
+  $DIALOG_ESC)
+  bash git-manager ;;
+esac
+exec 3>&1
+DIR=$( dialog \
+  --backtitle "$BK" \
+  --title "$MN" \
+  --inputbox "Paste the entry directory to the Text Box (Sorry there isn't a proper way to delete dir on dialog at least for now...) Cancel to abort"  0 0 \
+  2>&1 1>&3
+  )
+exec 3>&-
+case $? in
+ $DIALOG_OK)
+ rm -rf $DIR*
+ bash git-manager ;;
+ $DIALOG_CANCEL)
+ bash git-manager ;;
+ $DIALOG_ESC
+ bash git-manager ;;
+esac 
+
+fi
+
+if [[ "$1" == "--glbl" ]]
+then 
+
+# Exit Vars
+: ${DIALOG_OK=0}
+: ${DIALOG_CANCEL=1}
+: ${DIALOG_ESC=255}
+
+BK="Global Config"
+MT="INPUT CONFIG"
+
+exec 3>&1 
+VAR=$( dialog --backtitle "$BK" --title "$MT" --inputbox "Enter Username" 0 0 2>&1 1>&3)
+exec 3>&-
+case $? in 
+  $DIALOG_CANCEL)
+  bash git-manager ;;
+esac
+exec 3>&1
+VAR1=$( dialog --backtitle "$BK" --title "$MT" --inputbox "Enter Email" 0 0 2>&1 1>&3)
+exec 3>&-
+case $? in 
+ $DIALOG_OK)
+ git config --global user.name "$VAR"
+ git config --global user.email "$VAR1"
+ dialog --infobox "Done" 0 0
+ sleep 2
+ bash git-manager ;;
+ $DIALOG_CANCEL)
+ bash git-manager ;;
+esac
+
+ 

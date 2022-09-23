@@ -1,0 +1,39 @@
+#!/bin/bash
+DS="$HOME/Desktop/VS.desktop"
+
+if [[ "$1" == "--fix-one" ]]
+then
+echo "[Desktop Entry]" >> $DS
+echo "Version=1.70.1" >> $DS
+echo "Type=Application" >> $DS
+echo "Name=Visual Studio Code" >> $DS
+echo "GenericName=Text Editor" >> $DS
+echo "Comment=A Lightweight IDE" >> $DS
+echo "Exec=/usr/share/code --no-sandbox --enable-crashpad --user-data-dir $HOME" >> $DS
+echo "Terminal=false" >> $DS
+echo "MimeType=text/plain;" >> $DS
+echo "Icon=com.visualstudio.code" >> $DS
+echo "Categories=Development;IDE;TextEditor" >> $DS
+echo "StartupNotify=true" >> $DS
+echo "Done... Probably "
+exit
+fi
+
+if [[ "$1" == "--fix-two" ]]
+then
+echo "[Desktop Entry]" >> $DS
+echo "Version=1.70.1" >> $DS
+echo "Type=Application" >> $DS
+echo "Name=Visual Studio Code" >> $DS
+echo "GenericName=Text Editor" >> $DS
+echo "Comment=A Lightweight IDE" >> $DS
+echo "Exec=/usr/share/code --no-sandbox --enable-crashpad %F" >> $DS
+echo "Terminal=false" >> $DS
+echo "MimeType=text/plain;" >> $DS
+echo "Icon=com.visualstudio.code" >> $DS
+echo "Categories=Development;IDE;TextEditor" >> $DS
+echo "StartupNotify=true" >> $DS
+echo "Done... Probably "
+exit
+fi
+

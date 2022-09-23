@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Exit Vars
+: ${DIALOG_OK=0}
+: ${DIALOG_CANCEL=1}
+: ${DIALOG_ESC=255}
+
+if ( grep -i "true" /var/lib/git-manager/key )
+then
+TMPFILE=$(mktemp /tmp/gpcs-XXXXX)
+PMFILE="/var/lib/git-manager/records.txt"
+else
+TMPFILE="TMPLink Forbidden by User"
+PMFILE="PMFILE aborted by User"
+fi
+TIME=$(date)
+HERE=$(pwd)
+
+exec 3>&1
+input_a=$(dialog --backtitle "Enter Input" --title "Clone" --inputbox "Enter what Git User you want to enter? (Case Sensitive)" 0 0 2>&1 1>&3)
+exec 3>&-
+case $? in
+ $DIALOG_CANCEL)
+  bash git-manager ;;
+ esac
+ exec 3>&1
+input_b=$(dialog --backtitle "Enter input" --title "Clone" --inputbox "Enter what Git Repository you want from $input_a? (Case Sensitive)" 0 0 2>&1 1>&3)
+exec 3>&-
+case $? in
+ $DIALOG_CANCEL)
+ bash git-manager ;;
+ esac
+
+echo "STRING=$TMPFILE DATE=$TIME" > /var/lib/git-manager/cache/1.res
+
+git clone https://github.com/$input_a/$input_b
+
+if (grep -i "true" /var/lib/git-manager/key)
+then
+echo "Begin TMP Log Data" >> $TMPFILE
+echo "Date: $TIME" >> $TMPFILE
+echo "User Acessed: $input_a's $input_b" >> $TMPFILE
+echo "Repository Downloaded: $input_b" >> $TMPFILE
+echo "Located: $HERE/$input_b" >> $TMPFILE
+echo "" >> $TMPFILE
+echo "Begin TMP Log Data" >> $PMFILE
+echo "Date: $TIME" >> $PMFILE
+echo "User Acessed: $input_a's $input_b" >> $PMFILE
+echo "Repository Downloaded: $input_b" >> $PMFILE
+echo "Located: $HERE/$input_b" >> $PMFILE
+echo "" >> $PMFILE
+fi
+
+
+if [ -d $input_b ] && ( grep -i "true" /var/lib/git-manager/key )
+then
+dialog --backtitle "Message" --title "Result" --msgbox "Process now saved in $TMPFILE and in $PMFILE " 
+bash git-manager
+else
+bash git-manager 
+fi 
+
+

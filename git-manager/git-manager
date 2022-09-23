@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Exit Vars
+: ${DIALOG_OK=0}
+: ${DIALOG_CANCEL=1}
+: ${DIALOG_ESC=255}
+
+BT="Git Manager Beta"
+
+dialog --backtitle "$BT" --title "Welcome" --infobox "Welcome to Git Manager" 0 0
+sleep 3
+
+exec 3>&1
+MENU=$( dialog \
+  --backtitle "$BT" \
+  --title "Menu" \
+  --menu "Choose your method!" 0 0 0 \
+  "Clone" "Clone Repository" \
+  "Delete" "Delete Repository" \
+  "Setup" "Setup Git Manager" \
+  "Update" "Update Git" \
+  2>&1 1>&3
+  )
+exitvar=$?
+exec 3>&-
+case $exitvar in
+ $DIALOG_CANCEL)
+ exit 0 ;;
+ $DIALOG_ESC)
+ exit 255 ;;
+ esac
+case $MENU in
+  "Clone")
+  bash /usr/share/git-manager/clone ;;
+  "Delete")
+  bash /usr/share/git-manager/infowrite --del ;;
+  "Setup")
+  bash /usr/share/git-manager/config ;;
+  "Update")
+  apt-get update ; apt-get install git -y | dialog --programbox 60 40 ; dialog --backtitle "Update" --title "Process" --infobox "Done." 0 0 ; sleep 3 ; git-manager
+esac
+
