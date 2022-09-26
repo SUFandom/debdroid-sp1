@@ -47,7 +47,7 @@ case $? in
  $DIALOG_ESC
  bash git-manager ;;
 esac 
-
+exit
 fi
 
 if [[ "$1" == "--glbl" ]]
@@ -81,5 +81,6 @@ case $? in
  $DIALOG_CANCEL)
  bash git-manager ;;
 esac
-
+exit 
+fi
  
