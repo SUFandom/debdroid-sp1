@@ -37,6 +37,6 @@ case $MENU in
   "Setup")
   bash /usr/share/git-manager/config ;;
   "Update")
-  apt-get update ; apt-get install git -y | dialog --programbox 60 40 ; dialog --backtitle "Update" --title "Process" --infobox "Done." 0 0 ; sleep 3 ; git-manager
+  apt-get update ; apt-get install git -y | dialog --programbox 60 40 ; dialog --backtitle "Update" --title "Process" --infobox "Done." 0 0 ; sleep 3 ; git-manager ;;
 esac
 
