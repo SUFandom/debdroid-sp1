@@ -44,7 +44,7 @@ case $? in
  bash git-manager ;;
  $DIALOG_CANCEL)
  bash git-manager ;;
- $DIALOG_ESC
+ $DIALOG_ESC)
  bash git-manager ;;
 esac 
 exit
